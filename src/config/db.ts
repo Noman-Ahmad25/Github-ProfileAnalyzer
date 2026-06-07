@@ -12,12 +12,17 @@ if (!connectionString) {
 export const db = new Sequelize(connectionString, {
   dialect: 'mysql',
   logging: false,
+  dialectOptions: {
+    ssl: {
+      rejectUnauthorized: true,
+    },
+  },
 });
 
 export const connectDB = async (): Promise<void> => {
   try {
     await db.authenticate();
-    await db.sync({alter: true}); // Ensure models are synced with the database
+    await db.sync({ alter: true });
     console.log("MySQL Database Connection Pool Verified successfully!");
   } catch (error: any) {
     console.error("MySQL Connection Failed:", error.message);
