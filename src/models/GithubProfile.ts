@@ -1,9 +1,31 @@
-import {DataTypes} from "sequelize";
+import {DataTypes, Model} from "sequelize";
 import { db } from "../config/db.js";
 
-    export const GithubProfile = db.define("GithubProfile", {
+import { GithubProfileAttributes, GithubProfileCreationAttributes } from "../types/github.types.js";
+
+export class GithubProfile
+ extends Model <GithubProfileAttributes, GithubProfileCreationAttributes>
+    implements GithubProfileAttributes
+     {
+    declare id: number;
+    declare username: string;
+    declare name: string | null;
+    declare avatarUrl: string | null;
+    declare bio: string | null;
+    declare location: string | null;
+    declare followersCount: number;
+    declare followingCount: number;
+    declare publicReposCount: number;
+    declare totalStars: number;
+    declare mostUsedLanguages: Record<string, number> | null; // Language name and count
+    declare publicGistsCount: number;
+
+}
+
+GithubProfile.init(
+    {
         id: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.INTEGER.UNSIGNED,
             autoIncrement: true,
             primaryKey: true,
         },
@@ -38,18 +60,18 @@ import { db } from "../config/db.js";
             allowNull: false,
             defaultValue: 0,
         },
-        publicReposCount: {     
+        publicReposCount: {
             type: DataTypes.INTEGER,
             allowNull: false,
             defaultValue: 0,
-        },  
+        },
         totalStars: {
             type: DataTypes.INTEGER,
             allowNull: false,
             defaultValue: 0,
         },
         mostUsedLanguages: {
-            type: DataTypes.JSON,
+            type: DataTypes.JSON, // Store as JSON in MySQL
             allowNull: true,
         },
         publicGistsCount: {
@@ -57,16 +79,9 @@ import { db } from "../config/db.js";
             allowNull: false,
             defaultValue: 0,
         },
-        createdAt: {
-            type: DataTypes.DATE,
-            allowNull: false,
-            defaultValue: DataTypes.NOW,
-        },
-        updatedAt: {
-            type: DataTypes.DATE,
-            allowNull: false,
-            defaultValue: DataTypes.NOW,
-        },
-    });
-
-   
+    },
+    {
+        tableName: "github_profiles",
+        sequelize: db, // passing the `sequelize` instance is required
+    }
+);  

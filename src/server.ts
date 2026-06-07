@@ -1,11 +1,12 @@
 import dotenv from "dotenv";
+dotenv.config(); // Load environment variables from .env file
 import { app } from "./app.js";
 import { connectDB } from "./config/db.js"; // Import the verification helper
 import { GithubProfile } from "./models/GithubProfile.js";
 import { Sequelize } from "sequelize";
 import sequelize from "sequelize/lib/sequelize";
 
-dotenv.config();
+
 const PORT = process.env.PORT || 3000;
 
 
