@@ -21,16 +21,35 @@ This backend implements advanced software engineering design patterns specifical
 The codebase strictly follows the **Controller-Service-Repository** pattern to ensure a modular separation of concerns and maintain tight type safety across deep directory scales:
 
 ```text
-src/
-├── config/          # Database engine instantiation & environment boot blocks
-├── controllers/     # Business logic orchestrators and HTTP status maps
-├── middleware/      # Global security layers, request logging, and error pools
-├── models/          # Relational Sequelize schemas utilizing TypeScript attributes
-├── routes/          # Clean, versioned Express REST API routing layouts
-├── services/        # Third-party SDK integrations (Octokit Engine)
-├── types/           # Shared interface data contracts and model extensions
-├── utils/           # AI prompting handlers and async wrapper utilities
-└── validators/      # Route screening guards backed by Zod schemas
+Github-ProfileAnalyzer/          # Root Workspace Directory
+├── .postman/                     # Metadata context sync mappings
+├── postman/                      # Native Git-Synced Postman Collections & Environments
+├── src/                          # Application TypeScript Source Root
+│   ├── config/                   # Database engine instantiation & configuration blocks
+│   │   └── db.ts
+│   ├── controllers/              # Business logic orchestrators and HTTP status maps
+│   │   └── profile.controller.ts
+│   ├── middleware/               # Global security layers, request logging, and error pools
+│   ├── models/                   # Relational Sequelize schemas utilizing TypeScript attributes
+│   │   └── GithubProfile.ts
+│   ├── routes/                   # Clean, versioned Express REST API routing layouts
+│   ├── services/                 # Third-party SDK integrations (Octokit Engine)
+│   ├── types/                    # Shared interface data contracts and model extensions
+│   │   └── github.types.ts
+│   ├── utils/                    # AI prompting handlers and async wrapper utilities
+│   │   ├── aiEngine.ts
+│   │   └── catchAsync.ts
+│   ├── validators/               # Route screening guards backed by Zod schemas
+│   │   └── profile.validator.ts
+│   ├── app.ts                    # Core Express initialization, global configs, and mounts
+│   └── server.ts                 # Application bootstrap (Database sync & server listener)
+├── .env                          # Local Environment configuration parameters (Git Ignored)
+├── .env.example                  # Key distribution blueprints for cloning setup
+├── .gitignore                    # Local directory file inclusion exclusions
+├── package-lock.json             # Locked-down precise version installation mapping tree
+├── package.json                  # Script runners and core manifest requirements definitions
+└── tsconfig.json                 # TypeScript compilation option targets configuration
+
 ```
 
 ---
