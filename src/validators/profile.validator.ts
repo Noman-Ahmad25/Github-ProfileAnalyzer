@@ -21,7 +21,24 @@ export const listProfileSchema = z.object({
             .string()
             .optional()
             .transform((val) => (val ? parseInt(val, 10) : 1))
-            .pipe(z.number().int().positive())
+            .pipe(z.number().int().positive()),
+        sortBY: z
+            .string()
+            .optional()
+            .default("createdAt")
+            .refine((val) => ["createdAt", "totalStars", "followersCount", "publicReposCount"].includes(val), {
+                message: "Invalid sorting column field provided"
+            }),
+        order: z
+            .string()
+            .optional()
+            .default('DESC')
+            .transform((val) => val.toUpperCase())
+            .refine((val) => ["ASC", "DESC"].includes(val),{
+                message: "Ordering must strictly evaluate to 'ASC' or 'DESC'."
+            })
+
+
     })
 })
 

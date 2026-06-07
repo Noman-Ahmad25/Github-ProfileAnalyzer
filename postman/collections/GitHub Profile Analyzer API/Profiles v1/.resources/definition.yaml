@@ -1,0 +1,14 @@
+$kind: collection
+name: Profiles v1
+order: 1680665208684543
+description: |-
+  Covers all v1 endpoints for managing GitHub developer profiles and their cached analytics data.
+
+  This folder contains four operations that together implement a full cache lifecycle:
+
+  - **Get All Profiles (Index / Leaderboard)** – Returns a paginated list of every profile record currently stored in the database, useful for leaderboard or directory views.
+  - **Get Single Profile (Cache-First Read)** – Fetches a single developer's full analysis block. Serves cached data instantly on a hit (< 24 h); on a miss it calls the GitHub REST SDK and Gemini Flash LLM in parallel, then persists the result to MySQL.
+  - **Force Refresh Profile (Manual Sync)** – Bypasses the 24-hour cache threshold entirely, re-fetches live GitHub data, re-runs the Gemini LLM analysis, and overwrites the stored row immediately.
+  - **Delete Profile Cache (Eviction)** – Hard-deletes a developer's cached record from MySQL, allowing a clean re-fetch on the next read.
+
+  All endpoints share the base path `{{baseUrl}}/api/profiles` and accept a `:username` path parameter where applicable.

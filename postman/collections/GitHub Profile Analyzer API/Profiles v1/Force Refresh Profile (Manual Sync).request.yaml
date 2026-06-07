@@ -1,0 +1,19 @@
+$kind: http-request
+name: Force Refresh Profile (Manual Sync)
+description: |-
+  ### Manual Active Force Synchronization
+
+  Provides client applications with an **Active Cache-Bypass** route channel.
+
+  This endpoint completely ignores the standard passive 24-hour timestamp threshold evaluation loop. It forces the backend architecture to make direct, authenticated requests to GitHub's REST endpoints, recalculate total stargazers, map top languages, re-trigger the Gemini LLM analysis prompt, and overwrite old row configurations inside MySQL immediately.
+
+  - Use this when a developer has just updated their public GitHub profile information or created a major repository and wants to see changes update in the analyzer dashboard instantly.
+url: "{{baseUrl}}/api/profiles/:username"
+method: PUT
+pathVariables:
+  - key: username
+    value: Noman-Ahmad25
+    description: |
+      The unique GitHub username of the target account. Must be 1-39 characters, alphanumeric, and can contain single hyphens (but cannot start, end, or have consecutive hyphens).
+examples: .resources/Force Refresh Profile (Manual Sync).resources/examples
+order: 3724103501845200

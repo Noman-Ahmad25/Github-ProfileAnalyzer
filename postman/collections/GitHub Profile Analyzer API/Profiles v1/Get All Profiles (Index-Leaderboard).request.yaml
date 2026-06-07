@@ -1,0 +1,32 @@
+$kind: http-request
+name: Get All Profiles (Index/Leaderboard)
+description: |-
+  ### Retrieve Paginated Profiles Index & Leaderboard
+
+  This collection endpoint fetches an optimized, paginated matrix of all developer profiles cached inside our local MySQL engine instance.
+
+  - **Default Behavior:** Returns the top 10 most recently scanned profiles sorted by `createdAt DESC`.
+      
+  - **Leaderboard Generation:** By passing parameters like `?sortBy=totalStars&order=DESC`, this endpoint dynamically sorts records to generate global developer rankings.
+      
+
+  #### Validation Safety
+
+  All incoming query strings are intercepted and sanitized using a strict **Zod Schema Middleware Guard**. Strings are automatically cast to base-10 integers, and boundary checks prevent negative or `NaN` offset database crashes (e.g., passing `page=0` safely falls back to page 1).
+url: "{{baseUrl}}/api/profiles?limit=5&page=1&sortBy=totalStars&order=DESC"
+method: GET
+queryParams:
+  - key: limit
+    value: "5"
+    description: "Maximum number of rows to return per page (Max: 100, Default: 10)."
+  - key: page
+    value: "1"
+    description: Targeted page number index for row-skipping pagination math.
+  - key: sortBy
+    value: totalStars
+    description: "Sorting column targeting: createdAt, totalStars, followersCount, publicReposCount."
+  - key: order
+    value: DESC
+    description: "Ordering matrix evaluation direction: ASC or DESC."
+examples: .resources/Get All Profiles (Index-Leaderboard).resources/examples
+order: 1780851087468

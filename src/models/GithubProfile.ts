@@ -1,6 +1,6 @@
 import {DataTypes, Model} from "sequelize";
 import { db } from "../config/db.js";
-
+import { ProfileAnalysis } from "../types/github.types.js";
 import { GithubProfileAttributes, GithubProfileCreationAttributes } from "../types/github.types.js";
 
 export class GithubProfile
@@ -19,6 +19,7 @@ export class GithubProfile
     declare totalStars: number;
     declare mostUsedLanguages: Record<string, number> | null; // Language name and count
     declare publicGistsCount: number;
+    declare analysisData: ProfileAnalysis | null;
 
 }
 
@@ -78,6 +79,10 @@ GithubProfile.init(
             type: DataTypes.INTEGER,
             allowNull: false,
             defaultValue: 0,
+        },
+        analysisData: {
+            type: DataTypes.JSON,
+            allowNull: true,
         },
     },
     {

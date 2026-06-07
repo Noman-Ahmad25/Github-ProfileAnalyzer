@@ -1,3 +1,10 @@
+export interface ProfileAnalysis{
+    primaryRole: string;
+    codingHabit: string;
+    ecosystemDiversity: number;
+    insights: string[]
+
+}
 export interface GithubProfileAttributes {
     updatedAt?: Date;
     id: number;
@@ -12,6 +19,6 @@ export interface GithubProfileAttributes {
     totalStars: number;
     mostUsedLanguages: Record<string, number> | null; // Language name and count
     publicGistsCount: number;
+    analysisData?: ProfileAnalysis | null;
 }   
-
 export interface GithubProfileCreationAttributes extends Omit<GithubProfileAttributes, 'id'> {}

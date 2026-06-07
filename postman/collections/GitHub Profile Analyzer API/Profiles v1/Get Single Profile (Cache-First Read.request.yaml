@@ -1,0 +1,25 @@
+$kind: http-request
+name: Get Single Profile (Cache-First Read
+description: |-
+  ### Fetch Single Developer Profile Analytics
+
+  Processes incoming requests through a **Read-Through Caching Architecture** to optimize third-party API rate consumption.
+
+  #### Dynamic Lifecycle Processing:
+
+  1. **Cache Hit (< 24 Hours old):** Serves the full profile data payload immediately from our local MySQL pool. Response returns `source: "database"`.
+      
+  2. **Cache Miss / Stale Data:** Executes parallel API data extractions out of the GitHub REST API via the Octokit SDK.
+      
+  3. **AI Intelligence Engine:** Passes the raw code metrics and bio parameters down into the **Gemini 2.5 Flash LLM** using a strict structured JSON schema configuration.
+      
+  4. **Data Persistence:** Automatically performs a database `upsert` to update row matrices and timestamps before delivering a `200` or `201` response with `source: "github_api_create"`.
+url: "{{baseUrl}}/api/profiles/:username"
+method: GET
+pathVariables:
+  - key: username
+    value: noman-ahmad25
+    description: |
+      The unique GitHub username of the target account. Must be 1-39 characters, alphanumeric, and can contain single hyphens (but cannot start, end, or have consecutive hyphens).
+examples: .resources/Get Single Profile (Cache-First Read.resources/examples
+order: 2973849945568729

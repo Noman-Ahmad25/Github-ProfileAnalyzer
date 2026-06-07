@@ -1,0 +1,5 @@
+name: New Environment
+values:
+  - key: baseUrl
+    value: ''
+color: 0

@@ -1,0 +1,27 @@
+$kind: http-example
+name: Get All Profiles (Index/Leaderboard)
+request:
+  url: |-
+    {{baseUrl}}/api/profiles/
+    ?limit=5&page=1&sort=By&order=DESC
+  method: GET
+  queryParams:
+    - key: limit
+      value: "5"
+      description: "Maximum number of rows to return per page (Max: 100, Default: 10)."
+    - key: page
+      value: "1"
+      description: Targeted page number index for row-skipping pagination math.
+    - key: sort
+      value: By
+      description: "totalStarsSorting column targeting: createdAt, totalStars, followersCount, publicReposCount."
+    - key: order
+      value: DESC
+      description: "Ordering matrix evaluation direction: ASC or DESC."
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: ""
+order: 1780852691168

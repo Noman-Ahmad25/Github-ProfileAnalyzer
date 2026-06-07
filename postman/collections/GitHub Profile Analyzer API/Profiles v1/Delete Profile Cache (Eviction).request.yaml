@@ -1,0 +1,22 @@
+$kind: http-request
+name: Delete Profile Cache (Eviction)
+description: |-
+  ### Manual Cache Eviction (Hard Delete)
+
+  Executes an isolated administrative `destroy` transaction directly against the MySQL data instance tables.
+
+  - Locates rows matching the unique `:username` string parameters target.
+      
+  - Performs a **Hard Delete** clearing out all language metrics, profile data, and AI analytics entries.
+      
+
+  ### If successful, the developer record is fully purged. A subsequent `GET` request will treat the username as a brand new asset and trigger a clean `github_api_create` lifecycle.**s.**
+url: "{{baseUrl}}/api/profiles/:username"
+method: DELETE
+pathVariables:
+  - key: username
+    value: Noman-Ahmad25
+    description: |
+      The unique GitHub username of the target account. Must be 1-39 characters, alphanumeric, and can contain single hyphens (but cannot start, end, or have consecutive hyphens).
+examples: .resources/Delete Profile Cache (Eviction).resources/examples
+order: 3731358438780593

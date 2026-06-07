@@ -1,0 +1,212 @@
+$kind: collection
+name: GitHub Profile Analyzer API
+description: |-
+  # 🚀 GitHub Profile Analyzer API
+
+  A performance-optimized REST API built to fetch, analyze, and manage public GitHub developer analytics. The system implements a defensive architecture featuring strict input validation via **Zod**, robust database pooling via **Sequelize**, a dual-layer **Read-Through Cache**, and a structured **Google Gemini Flash LLM** intelligence pipeline.
+
+  ---
+
+  ## 🗂️ Lifecycle Design & Caching Architecture
+
+  To prevent rate-limit exhaustion on upstream resources and minimize latency, this API treats your local **MySQL database instance** as an adaptive caching layer:
+
+  - **Cache Hit (****`source: "database_cache"`****)**: If an endpoint receives a request for a profile updated within the last 24 hours, it short-circuits the pipeline and reads directly from local storage.
+      
+  - **Cache Miss / Stale (****`source: "github_api_create" / "github_api_update"`****)**: If data is missing or exceeds the 24-hour validity threshold, the backend fires concurrent, parallel requests to the GitHub REST SDK and passes the aggregated parameters down to a structured **Gemini 2.5 Flash** prompt before executing a database `upsert`.
+      
+  - **Active Cache Bypass (****`PUT`****)**: Manual update requests force a complete overwrite of the local row cache immediately, resetting the 24-hour timestamp clock.
+      
+  - **Cache Eviction (****`DELETE`****)**: Deletion requests execute a hard-destroy transaction to cleanly purge records from the `github_profiles` table.
+      
+
+  ---
+
+  ## ⚙️ Environment Configuration
+
+  This collection uses a global variable placeholder to cleanly isolate the targeted runtime environment.
+
+  - **Variable Name:** `baseUrl`
+      
+  - **Default Dev Target:** `http://localhost:3000`
+      
+
+  > 💡 **Tip:** To point this collection to a staging or production server, update the `baseUrl` current value in your Postman Environment or Collection Variables tab. Do not hardcode URLs inside individual requests. 
+    
+
+  ---
+
+  ## 📌 Endpoint Reference (`Profiles v1`)
+
+  ### 1\. GET All Profiles (Index & Leaderboard)
+
+  - **Endpoint:** `GET {{baseUrl}}/api/profiles`
+      
+  - **Sanitization:** Validated via `listProfilesSchema` middleware.
+      
+  - **Supported Parameters:**
+      
+      - `limit` _(Optional, Default: 10, Max: 100)_ - Number of profile objects to slice into the response array window.
+          
+      - `page` _(Optional, Default: 1)_ - Current page target for calculation of SQL row offsets.
+          
+      - `sortBy` _(Optional, Default: "createdAt")_ - Targeted column matrix for sorting: `createdAt`, `totalStars`, `followersCount`, `publicReposCount`.
+          
+      - `order` _(Optional, Default: "DESC")_ - Layout ordering sequence direction: `ASC` or `DESC`.
+          
+
+  #### Sample Success Payload (200 OK)
+
+  ``` json
+  {
+    "success": true,
+    "pagination": {
+      "totalItems": 7,
+      "totalPages": 2,
+      "currentPage": 1,
+      "itemsPerPage": 5,
+      "hasNextPage": true,
+      "hasPrevPage": false,
+      "sortedBy": "totalStars DESC"
+    },
+    "data": [
+      {
+        "id": 6,
+        "username": "slayerjain",
+        "name": "Shubham Jain",
+        "avatarUrl": "https://githubusercontent.com",
+        "followersCount": 94,
+        "publicReposCount": 105,
+        "totalStars": 50,
+        "mostUsedLanguages": { "Go": 13, "Java": 10, "Rust": 8 },
+        "analysisData": {
+          "primaryRole": "Backend Systems Specialist",
+          "codingHabit": "Experimental Builder",
+          "ecosystemDiversity": 100,
+          "insights": [
+            "Heavily focused on server-side logic, data structures, and systems programming.",
+            "Highly prolific developer who builds many trial applications."
+          ]
+        }
+      }
+    ]
+  }
+
+   ```
+
+  ---
+
+  ### 2\. GET Single Profile (Cache-First Read)
+
+  - **Endpoint:** `GET {{baseUrl}}/api/profiles/:username`
+      
+  - **Path Variable:** `username` - Strict regex-validated string matching GitHub's official handle constraints (alphanumeric and single internal hyphens only).
+      
+  - **Logic Flow:** Executes the Read-Through cache assessment loop. Evaluates absolute Epoch Unix milliseconds to determine data freshness.
+      
+
+  #### Sample Success Payload (200 OK / 201 Created)
+
+  ``` json
+  {
+    "success": true,
+    "source": "database_cache",
+    "data": {
+      "id": 6,
+      "username": "slayerjain",
+      "name": "Shubham Jain",
+      "avatarUrl": "https://githubusercontent.com",
+      "bio": "Helping developers release at light speed!",
+      "location": "New Delhi",
+      "followersCount": 94,
+      "totalStars": 50,
+      "mostUsedLanguages": { "Go": 13, "Java": 10 },
+      "analysisData": {
+        "primaryRole": "Backend Systems Specialist",
+        "codingHabit": "Experimental Builder",
+        "ecosystemDiversity": 100,
+        "insights": [
+          "Heavily focused on server-side logic, data structures, and systems programming.",
+          "Highly prolific developer who builds many trial applications."
+        ]
+      }
+    }
+  }
+
+   ```
+
+  ---
+
+  ### 3\. PUT Force Refresh Profile (Manual Sync)
+
+  - **Endpoint:** `PUT {{baseUrl}}/api/profiles/:username`
+      
+  - **Path Variable:** `username` - Target developer handle.
+      
+  - **Logic Flow:** Overrides the 24-hour timestamp constraint gate. Immediately invokes the authenticated Octokit and Gemini LLM pipelines to execute a hard refresh on the database data mapping.
+      
+
+  #### Sample Success Payload (200 OK)
+
+  ``` json
+  {
+    "success": true,
+    "source": "github_api_force_refresh",
+    "message": "Profile refreshed successfully from GitHub API",
+    "data": {
+      "id": 6,
+      "username": "slayerjain",
+      "totalStars": 52,
+      "analysisData": {
+        "primaryRole": "Backend Systems Specialist",
+        "codingHabit": "Product Focused"
+      }
+    }
+  }
+
+   ```
+
+  ---
+
+  ### 4\. DELETE Delete Profile Cache (Eviction)
+
+  - **Endpoint:** `DELETE {{baseUrl}}/api/profiles/:username`
+      
+  - **Path Variable:** `username` - Target developer handle.
+      
+  - **Logic Flow:** Removes a profile from local storage. If successful, any subsequent `GET` request will treat the user as an unknown asset and re-execute a clean external registration.
+      
+
+  #### Sample Success Payload (200 OK)
+
+  ``` json
+  {
+    "success": true,
+    "message": "Profile cache wiped successfully from MySQL database."
+  }
+
+   ```
+
+  ---
+
+  ## 🛑 Defensive Architecture & Custom Error Lifecycle
+
+  Incoming strings are screened by a centralized validation layer before reaching controllers or downstream services. If a request targets a malformed string or a non-existent account, the system bypasses raw, unhandled third-party crashes and maps responses down to a uniform, clean error schema:
+
+  ``` json
+  {
+    "success": false,
+    "message": "GitHub account \"slayerjain34dsc\" does not exist."
+  }
+
+   ```
+variables:
+  baseUrl: ""
+scripts:
+  - type: http:beforeRequest
+    code: |
+      // Automatically initializes and verifies base configuration variables
+      if (!pm.collectionVariables.get("baseUrl")) {
+          console.log("ℹ️ BaseUrl environment variable missing. Initializing localhost default path.");
+          pm.collectionVariables.set("baseUrl", "http://localhost:3000");
+      }

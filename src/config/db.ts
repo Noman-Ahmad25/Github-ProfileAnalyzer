@@ -18,10 +18,10 @@ export const db = new Sequelize(connectionString, {
 export const connectDB = async (): Promise<void> => {
   try {
     await db.authenticate();
-    await db.sync(); // Ensure models are synced with the database
-    console.log("🗄️  MySQL Database Connection Pool Verified successfully!");
+    await db.sync({alter: true}); // Ensure models are synced with the database
+    console.log("MySQL Database Connection Pool Verified successfully!");
   } catch (error: any) {
-    console.error("❌ MySQL Connection Failed:", error.message);
+    console.error("MySQL Connection Failed:", error.message);
     throw error; 
   }
 };

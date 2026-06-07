@@ -3,6 +3,7 @@ import cors from 'cors';
 import helmet from 'helmet';
 import morgan from 'morgan';
 import profileRoutes from "./routes/profile.route.js"
+import { errorHandler } from './middleware/error.js';
 
 const app = express();
 
@@ -19,5 +20,6 @@ app.use('/api/profiles', profileRoutes)
 app.get('/', (req: Request, res: Response) => {
   res.status(200).json({ message: "GitHub Profile Analyzer API is active" });
 });
+app.use(errorHandler);
 
 export { app };
