@@ -1,5 +1,4 @@
 import dotenv from 'dotenv';    
-// ⚠️ MUST BE CALLED BEFORE REQUIRING THE STRING
 dotenv.config();
 
 import { Sequelize } from 'sequelize';
