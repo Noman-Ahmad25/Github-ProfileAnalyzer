@@ -103,6 +103,41 @@ Incoming strings are screened by a centralized validation layer before reaching 
 ```
 
 ---
+---
+
+## 🛠️ Environment Setup & Installation
+
+Follow these steps to deploy and run this repository locally for evaluation:
+
+### 1. Clone the Workspace
+```bash
+git clone https://github.com/Noman-Ahmad25/Github-ProfileAnalyzer.git
+cd Github-ProfileAnalyzer
+```
+
+### 2. Configure Environment Parameters
+Create a physical `.env` file in the root directory matching your `.env.example` configurations:
+```ini
+PORT=3000
+MySQLConnectionString=mysql://root:your_password@localhost:3306/github_analyzer
+GITHUB_TOKEN=ghp_your_personal_access_token
+GEMINI_API_KEY=AIzaSy_your_gemini_api_key
+NODE_ENV=development
+```
+
+### 3. Install Dependencies & Build
+```bash
+npm install
+npm run build
+```
+
+### 4. Boot the Development Engine
+```bash
+npm run dev
+```
+The server will initialize, synchronize database column structures via Sequelize alterations, and listen on `http://localhost:3000`.
+
+---
 
 ## 🧪 Postman Integration Testing Suite
 
@@ -113,4 +148,11 @@ This repository features native Postman Git-Sync integration workspace configura
 2. Click the **Import** button in the top-left menu.
 3. Select **Folder** and choose the `./postman` directory from this project workspace.
 4. Postman will automatically read the configuration files and rebuild the entire `GitHub Profile Analyzer API` collection with all descriptions, variables, and markdown tables intact.
-5. The collection features a built-in pre-request runtime script that automatically configures an environment-agnostic `{{baseUrl}}` targeting `http://localhost:3000`. Detailed response mockup schema examples are saved inside the imported tabs.
+5. The collection features a built-in pre-request runtime script that automatically configures an environment-agnostic {{baseUrl}} targeting http://localhost:3000. Detailed response mockup schema examples are saved inside the imported tabs.
+---
+
+## 🕵️‍♂️ Troubleshooting & Edge Cases
+
+* **Undeclared Variable / SQL Syntax Errors:** Ensure your query strings parsed by Postman (`limit`, `page`) are evaluated strictly through base-10 parsing. The Zod validator automatically flags non-integer parameters before database query calls.
+* **Database Object Shadows:** If `createdAt` or `updatedAt` return `undefined`, verify that the model class definitions are using the TypeScript `declare` keyword. This preserves Sequelize's native dynamic getters and setters.
+* **API Rate Limitations (404 Not Found):** If repository endpoints reject lookups, verify that your `GITHUB_TOKEN` is actively loaded in system memory and holds the necessary `public_repo` clearance scopes. Unauthenticated guest paths will face automatic `404` rejection gates from GitHub's infrastructure.
