@@ -5,10 +5,7 @@ import { GithubProfile } from "../models/GithubProfile.js";
 import { generateAIProfileAnalysis } from "../utils/aiEngine.js";
 const githubService = new GithubService();
 
-/**
- * Shared utility function to synchronize external GitHub data straight down into MySQL
- */
-// Inside src/controllers/profile.controller.ts
+
 
 const fetchAndSaveProfile = async (username: string) => {
     try {
@@ -58,7 +55,6 @@ const fetchAndSaveProfile = async (username: string) => {
         return profile;
 
     } catch (error: any) {
-        // 🚀 THE FIX: Intercept Octokit's native 404 response
         if (error.status === 404) {
             const customError: any = new Error(`GitHub account "${username}" does not exist.`);
             customError.status = 404; // Set status so your error middleware picks it up
@@ -71,9 +67,7 @@ const fetchAndSaveProfile = async (username: string) => {
 };
 
 
-// ==========================================
-// 🕒 1. GET SINGLE PROFILE HANDLER
-// ==========================================
+
 export const getProfileHandler = catchAsync(async (req: Request, res: Response): Promise<any> => {
     const username = req.params.username as string;
 
@@ -103,10 +97,7 @@ export const getProfileHandler = catchAsync(async (req: Request, res: Response):
     });
 });
 
-// ==========================================
-// 🔄 2. FORCE UPDATE PROFILE HANDLER
-// ==========================================
-// 💡 FIXED: Wrapped in catchAsync, all try/catch blocks safely removed!
+
 export const updateProfileHandler = catchAsync(async (req: Request, res: Response): Promise<any> => {
     const username = req.params.username as string;
     const updatedProfile = await fetchAndSaveProfile(username);
@@ -119,10 +110,7 @@ export const updateProfileHandler = catchAsync(async (req: Request, res: Respons
     });
 });
 
-// ==========================================
-// 🗑️ 3. CACHE EVICTION PROFILE HANDLER
-// ==========================================
-// 💡 FIXED: Wrapped in catchAsync, all try/catch blocks safely removed!
+
 export const deleteProfileHandler = catchAsync(async (req: Request, res: Response): Promise<any> => {
     const username = req.params.username as string;
     const deletedRows = await GithubProfile.destroy({ where: { username } });
@@ -139,9 +127,7 @@ export const deleteProfileHandler = catchAsync(async (req: Request, res: Respons
     });
 });
 
-// ==========================================
-// 📂 4. INDEX / GET ALL PROFILES HANDLER
-// ==========================================
+
 export const getAllProfiles = catchAsync(async (req: Request, res: Response): Promise<any> => {
     const rawPage = req.query.page;
     const rawLimit = req.query.limit;
