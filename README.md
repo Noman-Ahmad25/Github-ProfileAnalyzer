@@ -6,6 +6,9 @@ A performance-optimized, enterprise-grade REST API built using **Node.js (v5+), 
 This backend implements advanced software engineering design patterns specifically tailored to handle upstream API rate limits, minimize network latency, and maintain clean, boilerplate-free control-flow lifecycles.
 
 ---
+## 🚀 Live Preview
+Explore the API in action: [GitHub Profile Analyzer API](https://github-profileanalyzer.onrender.com)
+*Note: API may have a slight delay on the first request due to serverless cold-start.*
 
 ## 🏛️ Key System Architecture Highlights
 
