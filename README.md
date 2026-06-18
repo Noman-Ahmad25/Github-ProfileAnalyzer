@@ -1,4 +1,5 @@
 # 🚀 AI-Powered GitHub Profile Analyzer API
+[![Ask DeepWiki](https://devin.ai/assets/askdeepwiki.png)](https://deepwiki.com/Noman-Ahmad25/Github-ProfileAnalyzer)
 
 A performance-optimized, enterprise-grade REST API built using **Node.js (v5+), Express, TypeScript, and MySQL**. The application fetches public developer analytics via the **Octokit REST SDK**, generates structured technical audits using the **Google Gemini 2.5 Flash LLM**, and manages records through an optimized **Read-Through Caching layer**.
 
@@ -49,7 +50,6 @@ Github-ProfileAnalyzer/          # Root Workspace Directory
 ├── package-lock.json             # Locked-down precise version installation mapping tree
 ├── package.json                  # Script runners and core manifest requirements definitions
 └── tsconfig.json                 # TypeScript compilation option targets configuration
-
 ```
 
 ---
@@ -103,7 +103,6 @@ Incoming strings are screened by a centralized validation layer before reaching 
 ```
 
 ---
----
 
 ## 🛠️ Environment Setup & Installation
 
@@ -149,6 +148,7 @@ This repository features native Postman Git-Sync integration workspace configura
 3. Select **Folder** and choose the `./postman` directory from this project workspace.
 4. Postman will automatically read the configuration files and rebuild the entire `GitHub Profile Analyzer API` collection with all descriptions, variables, and markdown tables intact.
 5. The collection features a built-in pre-request runtime script that automatically configures an environment-agnostic {{baseUrl}} targeting http://localhost:3000. Detailed response mockup schema examples are saved inside the imported tabs.
+
 ---
 
 ## 🕵️‍♂️ Troubleshooting & Edge Cases
